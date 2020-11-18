@@ -2,7 +2,13 @@ const aws = require('aws-sdk');
 const ssm = new aws.SSM({ apiVersion: '2014-11-06' })
 const rl = require('../utils/prompt').rl
 
-module.exports.deleteParams = async () => {
+exports.command = 'delete';
+exports.aliases = ['del', 'rm'];
+exports.describe = 'delete parameter';
+exports.builder = {}
+exports.handler = function (argv) {return deleteParams()}
+
+const deleteParams = async () => {
   let awsParams = {}
   rl.question('What is the path of the parameter?\n', path => {
     rl.question('What is the parameter name? (not case sensitive)\n', name => {
