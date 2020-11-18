@@ -21,16 +21,7 @@ const getParams = async () => {
       if (token) awsParams['NextToken'] = token;
       ssm.getParametersByPath(awsParams, (err, data) => {
         if (err) {
-          switch (err.code) {
-            case 'ExpiredTokenException':
-              console.info(`Expired creds. Run 'getCreds' and retry.`);
-              process.exit(1);
-            default:
-              console.error(
-                `Non mapped error occurred on ${awsParams.Name}. See below.\n${err.stack}`
-              );
-              break;
-          }
+          errResp(err.code)
         } else {
           for (let i = 0; i < data.Parameters.length; i++) {
             if (data.Parameters[i].Name.includes('CERT')) {
