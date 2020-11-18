@@ -1,6 +1,6 @@
 # SSM Wrapper
 ### Installation
-Once this repository is cloned down, be sure to run the following commands:
+Once this repository is cloned down, be sure to run the following commands from within the project directory:
 1. `npm install` - this will install the dependencies of the project (only two direct dependencies).
 1. `npm link` - this will symlink the CLI code to `ssm` command.
 
