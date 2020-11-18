@@ -1,0 +1,18 @@
+{
+  "name": "ssm-wrapper",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "ssm": "ssmWrapper.js"
+  },
+  "author": "Ian",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.794.0",
+    "yargs": "^16.1.1"
+  },
+  "main": "ssmWrapper.js",
+  "description": "SSM CLI Wrapper written in JS"
+}
