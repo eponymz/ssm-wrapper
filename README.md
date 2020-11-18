@@ -14,6 +14,7 @@ Once this repository is cloned down, be sure to run the following commands:
 | --file | -f | JSON file with params to add | If action == add or update |
 | --key | -k | The KMS key to encrypt the param(s) with | no |
 | --overwrite | -o | Whether to overwrite or not. Defaults to false | no |
+| --type | -t | The parameter type. Defaults to SecureString. | no |
 | --help | -h | Show help | no |
 
 ---

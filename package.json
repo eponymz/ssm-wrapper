@@ -5,7 +5,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "ssm": "ssmWrapper.js"
+    "ssm": "index.js"
   },
   "author": "Ian",
   "license": "ISC",
@@ -13,6 +13,6 @@
     "aws-sdk": "^2.794.0",
     "yargs": "^16.1.1"
   },
-  "main": "ssmWrapper.js",
+  "main": "index.js",
   "description": "SSM CLI Wrapper written in JS"
 }
