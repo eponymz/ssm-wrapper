@@ -6,11 +6,21 @@ Once this repository is cloned down, be sure to run the following commands from 
 
 ---
 
-### Command Options
+### Commands
+
+| Command | Alias | Description |
+| ------- | ----- | ----------- |
+| add | update | Add or update parameters |
+| list | ls, get | List parameters at a given path |
+| delete | del, rm | Delete specified parameter |
+
+---
+
+### Options
+> These flags will only be used with the `add|update` command.
 
 | Flag | Alias | Description | Required |
 | ----- | ----- | ----------- | -------- |
-| --action | -a | Action to take. One of list,add,update,delete. | yes |
 | --file | -f | JSON file with params to add | If action == add or update |
 | --key | -k | The KMS key to encrypt the param(s) with | no |
 | --overwrite | -o | Whether to overwrite or not. Defaults to false | no |
@@ -20,22 +30,22 @@ Once this repository is cloned down, be sure to run the following commands from 
 ---
 
 ### Command Examples
-* `ssm -a add -f /path/to/parameters.json`
+* `ssm add -f /path/to/parameters.json`
     * Will add parameters defined in the JSON file provided. 
-    * Any existent values will be skipped to due overwrite being false (default)
+    * Any existent values will be skipped to due overwrite being false (default).
     * Parameters will be encrypted with a default KMS key.
-* `ssm -a add -f /path/to/parameters.json -k alias/kms-key-alias`
+* `ssm add -f /path/to/parameters.json -k alias/kms-key-alias`
     * Will add parameters defined in the JSON file provided. 
-    * Any existent values will be skipped to due overwrite being false (default)
-    * Parameters will be encrypted with provided key. (requires KMS key and alias to exist)
-* `ssm -a update -f /path/to/parameters.json -o true -k alias/kms-key-alias`
+    * Any existent values will be skipped to due overwrite being false (default).
+    * Parameters will be encrypted with provided key (requires KMS key and alias to exist).
+* `ssm update -f /path/to/parameters.json -o true -k alias/kms-key-alias`
     * Will add parameters defined in the JSON file provided. 
     * Existing values will be replaced by values provided in the JSON file.
-    * Parameters will be encrypted with provided key. (requires KMS key and alias to exist)
-* `ssm -a list`
+    * Parameters will be encrypted with provided key (requires KMS key and alias to exist).
+* `ssm list`
     * Will list the parameters available at the provided path.
     * Command will prompt for desired path to list.
-* `ssm -a delete`
+* `ssm delete`
     * Will prompt for Parameter path, and sub prompt for Parameter Name.
     * Still in development/untested.
     * Recommended to not use until fully tested and complete.
