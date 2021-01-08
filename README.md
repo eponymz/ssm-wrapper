@@ -17,38 +17,31 @@ Once this repository is cloned down, be sure to run the following commands from 
 ---
 
 ### Options
-> These flags will only be used with the `add|update` command.
 
 | Flag | Alias | Description | Required |
 | ----- | ----- | ----------- | -------- |
-| --file | -f | JSON file with params to add | If action == add or update |
-| --key | -k | The KMS key to encrypt the param(s) with | no |
-| --overwrite | -o | Whether to overwrite or not. Defaults to false | no |
-| --type | -t | The parameter type. Defaults to SecureString. | no |
-| --help | -h | Show help | no |
+| --file | -f | JSON file with params to add. | Only with `add` cmd |
+| --key | -k | The KMS key to encrypt the param(s) with. | Only with `add` cmd |
+| --path | -p | The path to add or update parameters at. | yes |
+| --name | -n | The name of the parameter to delete. | Only with `delete` cmd |
+| --overwrite | -o | Whether to overwrite or not. Defaults to false. | no |
+| --help | -h | Show help. | no |
 
 ---
 
 ### Command Examples
-* `ssm add -f /path/to/parameters.json`
+* `ssm add -f /path/to/parameters.json -p my-service -k alias/my-service-kms-key`
     * Will add parameters defined in the JSON file provided. 
     * Any existent values will be skipped to due overwrite being false (default).
-    * Parameters will be encrypted with a default KMS key.
-* `ssm add -f /path/to/parameters.json -k alias/kms-key-alias`
-    * Will add parameters defined in the JSON file provided. 
-    * Any existent values will be skipped to due overwrite being false (default).
-    * Parameters will be encrypted with provided key (requires KMS key and alias to exist).
-* `ssm update -f /path/to/parameters.json -o true -k alias/kms-key-alias`
+    * Parameter name will be in the format of `/my-service/PARAMETER_NAME_FROM_FILE`.
+* `ssm add -f /path/to/parameters.json -p my-service -k alias/kms-key-alias -o true`
     * Will add parameters defined in the JSON file provided. 
     * Existing values will be replaced by values provided in the JSON file.
-    * Parameters will be encrypted with provided key (requires KMS key and alias to exist).
-* `ssm list`
+    * Parameter name will be in the format of `/my-service/PARAMETER_NAME_FROM_FILE`.
+* `ssm list -p my-service`
     * Will list the parameters available at the provided path.
-    * Command will prompt for desired path to list.
-* `ssm delete`
-    * Will prompt for Parameter path, and sub prompt for Parameter Name.
-    * Still in development/untested.
-    * Recommended to not use until fully tested and complete.
+* `ssm delete -p my-service -n MY_PARAMETER`
+    * Will delete the parameter located at `my-service/MY_PARAMETER`.
 
 ---
 
@@ -57,30 +50,37 @@ Once this repository is cloned down, be sure to run the following commands from 
 
 Can contain one or more parameters.
 
-`key` in each object will be the parameter path + parameter key. EX: `/my-service/MY_SECRET_PARAMETER`.
+`key` in each object will be the parameter key. This will be formatted with the `path` value provided from command EX: `/my-service/MY_SECRET_PARAMETER`.
 
-`value` in each object will be the parameter value (saved to AWS SSM as a SecureString) - support for other types coming in the future.
+`value` in each object will be the parameter value.
+
+`type` in each object will be the parameter type. **NOTE**: this does not currently default and will cause issues if not present in the JSON file. 
 ```json
 [
   {
-    "key": "/my-service/THIRD_PARTY_API_KEY",
-    "value": "$up3RsEcr3T"
+    "key": "THIRD_PARTY_API_KEY",
+    "value": "$up3RsEcr3T",
+    "type": "SecureString"
   },
   {
-    "key": "/my-service/DATABASE_HOST",
-    "value": "localhost"
+    "key": "DATABASE_HOST",
+    "value": "localhost",
+    "type": "SecureString"
   },
   {
-    "key": "/my-service/DATABASE_USER",
-    "value": "myservice_readonly_user"
+    "key": "DATABASE_USER",
+    "value": "myservice_readonly_user",
+    "type": "String"
   },
   {
-    "key": "/my-service/DATABASE_PASSWORD",
-    "value": "secretdbpassword"
+    "key": "DATABASE_PASSWORD",
+    "value": "secretdbpassword",
+    "type": "String"
   },
   {
-    "key": "/my-service/DATABASE_PORT",
-    "value": "5432"
+    "key": "DATABASE_PORT",
+    "value": "5432",
+    "type": "String"
   }
 ]
 ```
