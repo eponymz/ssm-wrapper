@@ -9,8 +9,8 @@ exports.aliases = ['update'];
 exports.describe = 'add or update parameters';
 exports.builder = (yargs) => {
   yargs
-    .example('$0 -f /path/to/parameters.json -p ops-service -k alias/ops-service-ssm-key')
-    .example('$0 -f /path/to/parameters.json -p ops-service -o true -k alias/ops-service-ssm-key')
+    .example('$0 -f /path/to/parameters.json -p my-service -k alias/alias/kms-key-alias')
+    .example('$0 -f /path/to/parameters.json -p my-service -k alias/alias/kms-key-alias -o true')
     .options({
       file: {
         alias: 'f',
@@ -49,7 +49,6 @@ const addUpdateParams = async (yargs) => {
     } else {
       delete awsParams['KeyId'];
     }
-
     ssm.putParameter(awsParams, (err, data) => {
       if (err) {
         errResp(err.code, err.stack, awsParams)

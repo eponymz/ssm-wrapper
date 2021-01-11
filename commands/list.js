@@ -1,6 +1,5 @@
 const aws = require('aws-sdk');
 const ssm = new aws.SSM({ apiVersion: '2014-11-06' });
-const rl = require('../utils/prompt').rl;
 const errResp = require('../utils/errors').errorResp;
 
 let getParamList = [];
@@ -10,11 +9,17 @@ exports.aliases = ['ls', 'get'];
 exports.describe = 'list parameters at path';
 exports.builder = (yargs) => {
   yargs
-    .example('$0 -p ops-service')
+    .example('$0 -p my-service')
+    .example('$0 -p my-service -r json')
     .options({
       path: {
         alias: 'p',
         describe: 'The SSM path to list from.'
+      },
+      result: {
+        alias: 'r',
+        default: 'table',
+        describe: 'Result format. Defaults to formatted table. Accepts `json, table`.',
       }
     })
     .demandOption(['path'], 'You must define the path to list.')
@@ -35,7 +40,8 @@ const getParams = async (yargs) => {
         errResp(err.code, err.stack, awsParams);
       } else {
         for (let i = 0; i < data.Parameters.length; i++) {
-          if (data.Parameters[i].Name.includes('CERT')) {
+          if (data.Parameters[i].Name.includes('_CERT') && yargs.r === 'table') {
+            // redact certificate values for consistent formatting when listing to table
             data.Parameters[i].Value = 'CERT REDACTED';
           }
           getParamList.push({
@@ -47,8 +53,13 @@ const getParams = async (yargs) => {
         if (data.NextToken) {
           getAWSParams(data.NextToken);
         } else {
-          console.table(getParamList);
-          process.exit(0)
+          if (yargs.r === 'json') {
+            console.info(require('util').format('%j', getParamList))
+            process.exit(0)
+          } else {
+            console.table(getParamList);
+            process.exit(0)
+          }
         }
       }
     });

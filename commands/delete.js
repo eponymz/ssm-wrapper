@@ -8,7 +8,7 @@ exports.aliases = ['del', 'rm'];
 exports.describe = 'delete parameter';
 exports.builder = (yargs) => {
   yargs
-    .example('$0 -p lending-service -n LENDING_ENABLED')
+    .example('$0 -p my-service -n MY_PARAMETER')
     .options({
       path: {
         alias: 'p',
