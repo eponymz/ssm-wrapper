@@ -25,26 +25,18 @@ exports.handler = function (argv) {return deleteParams(argv)}
 
 const deleteParams = async (yargs) => {
   let awsParams = {}
-  let paramName = yargs.n.toUpperCase()
-  rl.question(`Confirm deletion of /${yargs.p}/${paramName}?\n`, confirmed => {
-    rl.close()
-    if (confirmed != 'yes') {
-      console.error('Only an answer of \'yes\' will be accepted! Exiting..')
-      return
-    } else {
-      try {
-        awsParams['Name'] = `/${yargs.p}/${paramName}`
-        ssm.deleteParameter(awsParams, (err, data) => {
-          if (err) {
-            errResp(err.code, err.stack, awsParams)
-          } else {
-            console.info(`Deleted: ${awsParams.Name}`)
-            process.exit(0)
-          }
-        })
-      } catch (e) {
-        console.error(e)
-      }
+    try {
+      awsParams['Name'] = `/${yargs.p}/${yargs.n}`
+      ssm.deleteParameter(awsParams, (err, data) => {
+        if (err) {
+          errResp(err.code, err.stack, awsParams)
+        } else {
+          console.info(`Deleted: ${awsParams.Name}`)
+          process.exit(0)
+        }
+      })
+    } 
+    catch (e) {
+      console.error(e)
     }
-  })
 }
