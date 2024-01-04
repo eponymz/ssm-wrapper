@@ -30,14 +30,15 @@ exports.handler = function (argv) {
 
 const getParams = async (yargs) => {
   let awsParams = {};
-  awsParams['Path'] = `/${yargs.p}`;
+  awsParams['Path'] = yargs.p.startsWith('/') ? yargs.p : `/${yargs.p}`;
   awsParams['Recursive'] = true;
   awsParams['WithDecryption'] = true;
   const getAWSParams = (token) => {
     if (token) awsParams['NextToken'] = token;
     ssm.getParametersByPath(awsParams, (err, data) => {
       if (err) {
-        errResp(err.code, err.stack, awsParams);
+        errResp(err.code, awsParams);
+        throw new Error(err);
       } else {
         for (let i = 0; i < data.Parameters.length; i++) {
           if (data.Parameters[i].Name.includes('_CERT') && yargs.r === 'table') {
@@ -63,6 +64,7 @@ const getParams = async (yargs) => {
         }
       }
     });
+    return;
   };
 
   try {

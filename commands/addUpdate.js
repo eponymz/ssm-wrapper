@@ -30,7 +30,7 @@ exports.builder = (yargs) => {
         describe: 'Whether or not to overwrite the parameter.',
       },
     })
-    .demandOption(['file', 'path', 'key'], 'You must define: file, path, and key.');
+    .demandOption(['file', 'path'], 'You must define: file and path.');
 };
 exports.handler = async (argv) => {
   await addUpdateParams(argv);

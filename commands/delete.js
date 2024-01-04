@@ -9,6 +9,7 @@ exports.describe = 'delete parameter';
 exports.builder = (yargs) => {
   yargs
     .example('$0 -p my-service -n MY_PARAMETER')
+    .example('$0 -p my-service -n my_parameter -u true')
     .options({
       path: {
         alias: 'p',
@@ -17,15 +18,20 @@ exports.builder = (yargs) => {
       name: {
         alias: 'n',
         describe: 'The parameter to remove.'
+      },
+      uppercase: {
+        alias: 'u',
+        default: false,
+        describe: 'Convert the parameter name to upper case.'
       }
     })
     .demandOption(['path', 'name'], 'You must define the path and parameter name to remove.')
 };
-exports.handler = function (argv) {return deleteParams(argv)}
+exports.handler = function (argv) { return deleteParams(argv) }
 
 const deleteParams = async (yargs) => {
   let awsParams = {}
-  let paramName = yargs.n.toUpperCase()
+  let paramName = yargs.u ? yargs.n.toUpperCase() : yargs.n
   rl.question(`Confirm deletion of /${yargs.p}/${paramName}?\n`, confirmed => {
     rl.close()
     if (confirmed != 'yes') {
@@ -36,7 +42,7 @@ const deleteParams = async (yargs) => {
         awsParams['Name'] = `/${yargs.p}/${paramName}`
         ssm.deleteParameter(awsParams, (err, data) => {
           if (err) {
-            errResp(err.code, err.stack, awsParams)
+            errResp(err.code, awsParams)
           } else {
             console.info(`Deleted: ${awsParams.Name}`)
             process.exit(0)

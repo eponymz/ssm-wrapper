@@ -1,4 +1,4 @@
-module.exports.errorResp = (errCode, errStack, awsParams) => {
+module.exports.errorResp = (errCode, awsParams) => {
   switch (errCode) {
     case 'AccessDeniedException':
       console.error(`You do not have sufficient access to perform this action.`)
@@ -7,10 +7,10 @@ module.exports.errorResp = (errCode, errStack, awsParams) => {
       console.info(`Expired creds. Refresh AWS credentials and retry.`)
       process.exit(1)
     case 'HierarchyLevelLimitExceededException':
-      console.error(`A hierarchy can have a maximum of 15 levels. Unable to create ${awsParams.Name} at the defined hierarchy.`)
+      console.error(`A hierarchy can have a maximum of 15 levels. Unable to create ${awsParams.Path} at the defined hierarchy.`)
       break
     case 'HierarchyTypeMismatchException':
-      console.error(`Unable to change type for ${awsParams.Name}. You must create a new, unique parameter.`)
+      console.error(`Unable to change type for ${awsParams.Path}. You must create a new, unique parameter.`)
       break
     case 'IncompleteSignature':
       console.error(`The request signature does not conform to AWS standards.`)
@@ -25,7 +25,7 @@ module.exports.errorResp = (errCode, errStack, awsParams) => {
       console.error(`The action or operation requested is invalid. Verify that the action is typed correctly.`)
       break
     case 'InvalidAllowedPatternException':
-      console.error(`The request for ${awsParams.Name} does not meet the regular expression requirement.`)
+      console.error(`The request for ${awsParams.Path} does not meet the regular expression requirement.`)
       break
     case 'InvalidClientTokenId':
       console.error(`The X.509 certificate or AWS access key ID provided does not exist in AWS records.`)
@@ -37,7 +37,7 @@ module.exports.errorResp = (errCode, errStack, awsParams) => {
       console.error(`Parameters that must not be used together were used together.`)
       break
     case 'InvalidParameterType':
-      console.error(`Invalid parameter type for ${awsParams.Name}. See below for info.\n${errStack}`)
+      console.error(`Invalid parameter type for ${awsParams.Path}. See below for info.`)
       break
     case 'InvalidParameterValue':
       console.error(`An invalid or out-of-range value was supplied for the input parameter.`)
@@ -64,19 +64,19 @@ module.exports.errorResp = (errCode, errStack, awsParams) => {
       console.error(`The AWS access key ID needs a subscription for the service.`)
       break
     case 'ParameterAlreadyExists':
-      console.info(`Parameter ${awsParams.Name} already exists and overwrite is set to false. Skipping.`)
+      console.info(`Parameter ${awsParams.Path} already exists and overwrite is set to false. Skipping.`)
       break
     case 'ParameterLimitExceeded':
       console.error(`You have exceeded the number of parameters for this AWS account. Delete one or more parameters and try again.`)
       break
     case 'ParameterMaxVersionLimitExceeded':
-      console.error(`You attempted to create a new version of ${awsParams.Name} by calling the PutParameter API with the overwrite flag. The oldest version can't be deleted because it has a label associated with it. Move the label to another version of the parameter, and try again.`)
+      console.error(`You attempted to create a new version of ${awsParams.Path} by calling the PutParameter API with the overwrite flag. The oldest version can't be deleted because it has a label associated with it. Move the label to another version of the parameter, and try again.`)
       break
     case 'ParameterNotFound':
-      console.error(`The parameter could not be found. Verify that ${awsParams.Name} exists and try again.`)
+      console.error(`The parameter could not be found. Verify that ${awsParams.Path} exists and try again.`)
       break
     case 'ParameterPatternMismatchException':
-      console.error(`The parameter name: ${awsParams.Name} is not valid.`)
+      console.error(`The parameter name: ${awsParams.Path} is not valid.`)
       break
     case 'RequestExpired':
       console.error(`The request reached the service more than 15 minutes before or after the date stamp on the request.`)
@@ -91,13 +91,13 @@ module.exports.errorResp = (errCode, errStack, awsParams) => {
       console.error(`There are concurrent updates for a resource that supports one update at a time.`)
       break
     case 'UnsupportedParameterType':
-      console.error(`The parameter type for ${awsParams.Name} is not supported.`)
+      console.error(`The parameter type for ${awsParams.Path} is not supported.`)
       break
     case 'ValidationException':
-      console.error(`Valdiation error occurred on ${awsParams.Name}. See below for info.\n${errStack}`)
+      console.error(`Valdiation error occurred on ${awsParams.Path}. See below for info.`)
       break
     default:
-      console.error(`Non mapped error occurred on ${awsParams.Name}. See below.\n${errStack}`)
+      console.error(`Non mapped error occurred on ${awsParams.Path}. See below.`)
       break
   }
 }
