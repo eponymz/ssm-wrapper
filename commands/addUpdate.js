@@ -28,6 +28,7 @@ exports.builder = (yargs) => {
         alias: 'o',
         default: false,
         describe: 'Whether or not to overwrite the parameter.',
+        type: 'boolean',
       },
     })
     .demandOption(['file', 'path'], 'You must define: file and path.');
